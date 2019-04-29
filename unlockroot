@@ -1,0 +1,9 @@
+#! /bin/bash
+defaultpass="raspberry"
+
+# New password to use
+rootpass="YourNewPassword"
+
+echo $defaultpass | sudo -S sed -i '1s;^;PermitRootLogin yes\n;' /etc/ssh/sshd_config
+(echo $defaultpass; echo root:$rootpass) | sudo -S chpasswd
+echo $defaultpass | sudo reboot

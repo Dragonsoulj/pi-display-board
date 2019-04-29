@@ -1,0 +1,14 @@
+#! /bin/sh
+# /etc/init.d/startvideo
+
+### BEGIN INIT INFO
+# Provides:             startvideo
+# Required-Start:       $syslog
+# Required-Stop:        $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Loops a video
+# Description:          A simple script to loop a video continuously.
+### END INIT INFO
+
+omxplayer --loop --no-osd /home/public/videos/loopvideo.mp4

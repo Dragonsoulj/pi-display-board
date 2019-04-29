@@ -1,0 +1,40 @@
+#! /bin/bash
+# Replace each variable with your desired names and passwords
+computername="YourComputerName"
+primaryuser="UserToReplaceUserPi"
+primarypass="UserPisNewPassword"
+secondaryuser="SecondaryUserThatCanAccessSambaShare"
+secondaryuserdisplayname="SecondaryUser DisplayName"
+secondarypass="SecondaryUserPassowrd"
+group="UserGroupToBeCreatedForSambaPermissions"
+
+apt update && apt -y upgrade && apt -y install samba samba-common-bin omxplayer exfat-fuse exfat-utils
+cd /etc
+sed -i "s/\bpi\b/$primaryuser/g" passwd group shadow gshadow sudoers lightdm/lightdm.conf systemd/system/autologin@.service sudoers.d/* polkit-1/localauthority.conf.d/60-desktop-policy.conf
+mv /home/pi /home/$primaryuser
+ln -s /home/$primaryuser /home/pi
+mv -v /var/spool/cron/crontabs/pi /var/spool/cron/crontabs/$primaryuser
+[ -f /var/spool/mail/pi ] && mv -v /var/spool/mail/pi /var/spool/mail/$primaryuser
+echo "$primaryuser:$primarypass" | chpasswd
+adduser --disabled-password --gecos $secondaryuserdisplayname $secondaryuser
+echo "$secondaryuser:$secondarypass" | chpasswd
+groupadd $group
+mkdir /home/public
+mkdir /home/public/videos
+touch /home/public/videos/loopvideo.mp4
+chgrp -R $group /home/public
+chmod g+rwx -R /home/public
+usermod -a -G $group $primaryuser
+usermod -a -G $group $secondaryuser
+(echo $primarypass; echo $primarypass) | smbpasswd -a $primaryuser
+(echo $secondarypass; echo $secondarypass) | smbpasswd -a $secondaryuser
+cp /boot/startvideo /etc/init.d/startvideo
+chmod 755 /etc/init.d/startvideo
+update-rc.d startvideo defaults
+cat /boot/samba >> /etc/samba/smb.conf
+sed -i '1d' /etc/ssh/sshd_config
+sed -i 's/gb/us/g' /etc/default/keyboard
+sed -i "s/raspberrypi/$computername/g" /etc/hosts
+sed -i "s/raspberrypi/$computername/g" /etc/hostname
+passwd -l root
+reboot

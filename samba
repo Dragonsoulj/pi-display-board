@@ -1,0 +1,11 @@
+
+[public]
+   comment = Public Share
+   path = /home/public
+   browseable = yes
+   writeable = yes
+   guest ok = no
+   create mask = 0775
+   directory mask = 0775
+   public = no
+
