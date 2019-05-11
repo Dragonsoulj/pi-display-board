@@ -75,7 +75,7 @@ network={
 
 Now that we have all of our files ready, we need to copy all of them into the boot folder of our Raspbian install.
 
-Plug in the Pi with the files all loaded. The ssh and wpa_supplicant.conf files will be used and should disappear when you look again. ssh will enable ssh access, and the wpa_supplicant.conf file will store the settings for your Wi-Fi network so it can automatically connect each time. As said before, feel free to exclude this one if you are using an ethernet connection.
+Plug in the Pi with the files all loaded. The ssh and wpa_supplicant.conf files will be used and should disappear when you look again. ssh will enable SSH access, and the wpa_supplicant.conf file will store the settings for your Wi-Fi network so it can automatically connect each time. As said before, feel free to exclude this one if you are using an ethernet connection.
 
 After a few minutes for the Pi to startup and connect to the network, you will need to SSH into the Pi. If it is a fresh install, you can ping the default name to find the IP address.
 
@@ -95,15 +95,15 @@ The default password is
 raspberry
 ```
 
-Now we need to unlock the root user account. Now that we are logged in, run the unlockroot script.
+Now we need to unlock the root user account. Once you are logged in, run the unlockroot script.
 
 ```
 /etc/boot/unlockroot
 ```
 
-This will add a line to the sshd_config file which handles SSH permissions, connection parameters, and more. The added line allows the user root to log in through SSH. Once the script finishes, the Pi will reboot.
+This will add a line to the sshd_config file which handles SSH permissions, connection parameters, and more. The added line allows the user "root" to log in through SSH. Once the script finishes, the Pi will reboot.
 
-Once the Pi reboots, reconnect using SSH with the user root and the password you set.
+Once the Pi reboots, reconnect using SSH with the user "root" and the password you set.
 
 ```
 ssh root@192.168.1.3
@@ -115,14 +115,14 @@ Run the automation script to finish the installation and configuration phase.
 /etc/boot/automation
 ```
 
-This script will update and upgrade your system, and then install the necessary packages. If you wish to avoid the upgrade for whatever reason, delete this from the scripts
+This script will update and upgrade your system, and then install the necessary packages. If you wish to avoid the upgrade for whatever reason, delete this from the script.
 
 ```
 && apt -y upgrade
 ```
 
-The two exfat packages are not required, but are helpful if you use an exfat formatted drive for large transfer.
+The two exfat packages are not required, but are helpful if you use an exfat formatted drive for large file transfers.
 
 The script will rename the default pi user account to the new name you specified and change the password. A secondary user account will be created, as well as a permissions group for accessing the folder share. Once the directories are created, the startup script for launching omxplayer with the video to be looped will be added. Samba will be setup and both users added to the list. The changes made to allow root to login will be reverted, the default keyboard will be set to US (makes it easier to type the $ in scripts), and the Pi will be renamed to the appropriate name. A reboot at the end finalizes the setup.
 
-To complete the install, connect through Samba and replace the loopvideo.mp4 file with another video titled loopvideo.mp4. Power cycling the Pi will have the new video played at startup on an infinite loop.
+To complete the install, connect through Samba and replace the loopvideo.mp4 file with another video titled loopvideo.mp4. Power cycling the Pi will have the new video playing at startup on an infinite loop.
